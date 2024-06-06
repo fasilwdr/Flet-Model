@@ -1,0 +1,10 @@
+{
+  "name": "Flet App",
+  "short_name": "Flet App",
+  "version": "1.0.1",
+  "default_theme_mode": "light",
+  "views": [
+    "views/main_view.py",
+    "views/second_view.py"
+  ]
+}
