@@ -51,8 +51,8 @@ class Model:
 
         self.init()
 
-        #Add Overlay Controls to bind event handlers
-        controls_to_bind = controls + self.overlay_controls
+        #Add Other Controls to bind event handlers
+        controls_to_bind = controls + self.overlay_controls + [self.appbar, self.bottom_appbar, self.drawer, self.navigation_bar]
         # Dynamically bind event handlers
         self.bind_event_handlers(controls_to_bind)
 
@@ -95,6 +95,8 @@ class Model:
             # If the control has nested controls, bind their event handlers too
             if hasattr(control, 'controls'):
                 self.bind_event_handlers(control.controls)
+            if hasattr(control, 'content'):
+                self.bind_event_handlers([control.content])
 
 
 def view_model(page):

@@ -11,7 +11,7 @@ class MainView(Model):
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     appbar = ft.AppBar(
-        leading=ft.Icon(ft.icons.PALETTE),
+        leading=ft.IconButton(ft.icons.PALETTE, on_click="check"),
         leading_width=40,
         title=ft.Text("Main View"),
         center_title=True,
@@ -70,7 +70,7 @@ class MainView(Model):
 
     # AlertDialog
     dlg = ft.AlertDialog(
-        title=ft.Text("Hello, you!"), on_dismiss=lambda e: print("Dialog dismissed!")
+        title=ft.Text("Hello, you!")
     )
 
     dlg_modal = ft.AlertDialog(
@@ -89,7 +89,7 @@ class MainView(Model):
         options=[
             ft.dropdown.Option("Open Drawer"),
             ft.dropdown.Option("Show Banner"),
-            ft.dropdown.Option("Open DatePicker"),
+            # ft.dropdown.Option("Open DatePicker"),
             ft.dropdown.Option("Show Dialog"),
             ft.dropdown.Option("Show Dialog Modal"),
             ft.dropdown.Option("Show BottomSheet"),
@@ -122,14 +122,14 @@ class MainView(Model):
     def date_picker_dismissed(self, e):
         print(f"Date picker dismissed, value is {self.date_picker.value}")
 
-    date_picker = ft.DatePicker(
-            on_change="change_date",
-            on_dismiss="date_picker_dismissed",
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
-        )
-
-    overlay_controls = [date_picker]
+    # date_picker = ft.DatePicker(
+    #         on_change="change_date",
+    #         on_dismiss="date_picker_dismissed",
+    #         first_date=datetime.datetime(2023, 10, 1),
+    #         last_date=datetime.datetime(2024, 10, 1),
+    #     )
+    #
+    # overlay_controls = [date_picker]
 
     controls = [
         actions,
