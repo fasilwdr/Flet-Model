@@ -1,6 +1,6 @@
 #main_view
 import flet as ft
-from core.base import Model, Control
+from core.base import Model
 from core.controls import UserError, UserInfo, UserWarning
 import datetime
 
@@ -9,9 +9,6 @@ class MainView(Model):
     route = '/'
     vertical_alignment = ft.MainAxisAlignment.CENTER
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
-    # def init(self):
-    #     print("init")
 
     appbar = ft.AppBar(
         leading=ft.Icon(ft.icons.PALETTE),
@@ -53,24 +50,7 @@ class MainView(Model):
         ],
     )
 
-    #DatePicker
-    def change_date(self, e):
-        print(f"Date picker changed, value is {self.date_picker.value}")
-
-    def date_picker_dismissed(self, e):
-        print(f"Date picker dismissed, value is {self.date_picker.value}")
-
-    date_picker = Control(
-        ft.DatePicker(
-            on_change="change_date",
-            on_dismiss="date_picker_dismissed",
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
-        ),
-        overlay=True
-    )
-
-    #Banner
+    # Banner
     def close_banner(e):
         e.control.page.close_banner()
         print("banner closed")
@@ -88,12 +68,12 @@ class MainView(Model):
         ],
     )
 
-    #AlertDialog
-    dlg = Control(ft.AlertDialog(
+    # AlertDialog
+    dlg = ft.AlertDialog(
         title=ft.Text("Hello, you!"), on_dismiss=lambda e: print("Dialog dismissed!")
-    ), dialog=True)
+    )
 
-    dlg_modal = Control(ft.AlertDialog(
+    dlg_modal = ft.AlertDialog(
         modal=True,
         title=ft.Text("Please confirm"),
         content=ft.Text("Do you really want to delete all those files?"),
@@ -103,22 +83,6 @@ class MainView(Model):
         ],
         actions_alignment=ft.MainAxisAlignment.END,
         on_dismiss=lambda e: print("Modal dialog dismissed!"),
-    ))
-
-    #BottomSheet
-    bottom_sheet = ft.BottomSheet(
-        ft.Container(
-            ft.Column(
-                [
-                    ft.Text("This is sheet's content!"),
-                    ft.ElevatedButton("Close bottom sheet", on_click=lambda e: e.control.page.close_bottom_sheet()),
-                ],
-                tight=True,
-            ),
-            padding=10,
-        ),
-        open=True,
-        on_dismiss=lambda e: print("Bottom Sheet dismissed!"),
     )
 
     actions = ft.Dropdown(
@@ -135,18 +99,42 @@ class MainView(Model):
             ft.dropdown.Option("Go to Second Page"),
         ],
     )
-    text = ft.TextField(label="Text")
-    sample = Control(
-        ft.ResponsiveRow(
-            controls=[
-                ft.Text("Check how to perform the flet controls in this Flet-Model", size=15, text_align="center", color=ft.colors.PRIMARY),
-                actions,
-                text
-            ]
+    # BottomSheet
+    bottom_sheet = ft.BottomSheet(
+        ft.Container(
+            ft.Column(
+                [
+                    ft.Text("This is sheet's content!"),
+                    ft.ElevatedButton("Close bottom sheet", on_click=lambda e: e.control.page.close_bottom_sheet()),
+                ],
+                tight=True,
+            ),
+            padding=10,
         ),
-        sequence=1
+        open=True,
+        on_dismiss=lambda e: print("Bottom Sheet dismissed!"),
     )
-    check_button = Control(ft.ElevatedButton(text="Check", on_click="on_click_check_button"), sequence=2)
+
+    # DatePicker
+    def change_date(self, e):
+        print(f"Date picker changed, value is {self.date_picker.value}")
+
+    def date_picker_dismissed(self, e):
+        print(f"Date picker dismissed, value is {self.date_picker.value}")
+
+    date_picker = ft.DatePicker(
+            on_change="change_date",
+            on_dismiss="date_picker_dismissed",
+            first_date=datetime.datetime(2023, 10, 1),
+            last_date=datetime.datetime(2024, 10, 1),
+        )
+
+    overlay_controls = [date_picker]
+
+    controls = [
+        actions,
+        ft.ElevatedButton("Go", on_click='on_click_check_button')
+    ]
 
     def on_click_check_button(self, e):
         if self.actions.value == 'Check UserError (SnackBar)':
@@ -155,7 +143,7 @@ class MainView(Model):
             return UserInfo(self.page, "Info Message")
         elif self.actions.value == 'Check UserWarning (SnackBar)':
             return UserWarning(self.page, "Warning Message")
-        elif self.actions.value == 'Open Drawer':
+        if self.actions.value == 'Open Drawer':
             self.page.show_drawer(self.drawer)
         elif self.actions.value == 'Go to Second Page':
             self.page.go('/second')
@@ -169,5 +157,7 @@ class MainView(Model):
             self.page.show_dialog(self.dlg_modal)
         elif self.actions.value == 'Show BottomSheet':
             self.page.show_bottom_sheet(self.bottom_sheet)
+
+
 
 

@@ -1,11 +1,17 @@
 #main_view
 import flet as ft
-from core.base import Model, Control
+from core.base import Model
 
 
 class SecondView(Model):
     route = '/second'
     back_route = '/'
+
+    vertical_alignment = ft.MainAxisAlignment.CENTER
+    horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    # def init(self):
+    #     print("init")
 
     appbar = ft.AppBar(
         leading=ft.Icon(ft.icons.PALETTE),
@@ -13,9 +19,9 @@ class SecondView(Model):
         title=ft.Text("Second View"),
         center_title=True,
         bgcolor=ft.colors.SURFACE_VARIANT)
-    go_button = Control(ft.ElevatedButton(text="Go Main View", on_click="on_click_go_button"), sequence=1)
 
-    def on_click_go_button(self, e):
-        self.page.go('/')
-
+    controls = [
+        ft.Text("Second Page"),
+        ft.ElevatedButton("Go Home", on_click=lambda e: e.control.page.go('/'))
+    ]
 
