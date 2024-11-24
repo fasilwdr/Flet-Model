@@ -14,9 +14,10 @@ Here's a simple example of how to use Flet Model:
 
 ```python
 import flet as ft
-from flet_model import main, Model
+from flet_model import Model, Router
 
-class FirstView(Model):
+
+class First(Model):
     route = 'first'
     vertical_alignment = ft.MainAxisAlignment.CENTER
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -30,10 +31,12 @@ class FirstView(Model):
     ]
 
     def go_second(self, e):
-        self.page.go('first/second')
+        self.page.go('/first/second')
 
-class SecondView(Model):
+
+class Second(Model):
     route = 'second'
+    title = "Test"
     vertical_alignment = ft.MainAxisAlignment.CENTER
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
@@ -48,7 +51,19 @@ class SecondView(Model):
     def go_first(self, e):
         self.page.go('first')
 
-# Run the Flet app
+
+def main(page: ft.Page):
+    page.title = "Title"
+    page.theme_mode = "light"
+    # Initialize router with route mappings
+    Router(
+        {'first': First(page)},
+        {'second': Second(page)}
+    )
+
+    page.go(page.route)
+
+
 ft.app(target=main)
 ```
 
@@ -59,6 +74,18 @@ ft.app(target=main)
 - Event binding
 - Support for nested routes
 - Easy navigation between views
+- View caching for improved performance
+- Comprehensive UI component configuration (AppBar, BottomAppBar, FAB, etc.)
+- Auto-binding of event handlers with caching
+- Thread-safe initialization hooks (init and post_init)
+- Support for overlay controls
+- Customizable layout properties (alignment, padding, spacing)
+- Keyboard event handling
+- Scroll event handling
+- Flexible control definition (static list or callable)
+- Built-in view state management
+- Navigation drawer support (both start and end)
+- Built-in support for fullscreen dialogs
 
 ## License
 
