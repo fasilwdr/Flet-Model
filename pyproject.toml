@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [{ name = "Fasil", email = "fasilwdr@hotmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
-    "Development Status :: 3 :: Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
