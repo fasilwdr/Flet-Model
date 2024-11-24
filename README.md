@@ -1,116 +1,64 @@
-
 # Flet Model
 
-This repository contains a simple Flet application demonstrating a basic structure and usage of the Flet framework.
+A Model-based router for Flet applications that simplifies the creation of multi-page applications.
 
-## Repository Structure
+## Installation
 
-```plaintext
-Flet-Model/
-├── assets
-│   └── icon.png
-├── core
-│   └── base.py
-├── views
-│   └── main_view.py  (Add add all flet views here)
-├── main.py
-└── manifest.json
+```bash
+pip install flet-model
 ```
-
-### File Descriptions
-
-- **assets/icon.png**: Placeholder for assets like icons and images.
-- **core/base.py**: Contains the core classes and logic for the application.
-- **views/main_view.py**: Example view demonstrating the usage of the `Model` and `Control` classes.
-- **main.py**: Entry point for the Flet application, handling routing and initial setup.
-- **manifest.json**: Configuration file specifying application metadata and views.
-
-## Main Components
-
-### main.py
-
-This is the entry point of the application. It loads the configuration from `manifest.json`, dynamically imports the required modules, and sets up the routing and error handling.
-
-### core/base.py
-
-Defines the `Control` and `Model` classes which are used to represent UI components and views in the application.
-
-- **Control**: Wrapper for Flet controls with additional properties.
-- **Model**: Base class for creating views. It handles the creation and arrangement of `Control` instances.
-
-### views/main_view.py
-
-An example view demonstrating how to use the `Model` and `Control` classes.
-
-```python
-#main_view
-import flet as ft
-from core.base import Model, Control
-
-class MainView(Model):
-    route = '/'
-
-    appbar = ft.AppBar(
-        leading=ft.Icon(ft.icons.PALETTE),
-        leading_width=40,
-        title=ft.Text("AppBar Example"),
-        center_title=False,
-        bgcolor=ft.colors.SURFACE_VARIANT,
-        actions=[
-            ft.IconButton(ft.icons.WB_SUNNY_OUTLINED),
-            ft.IconButton(ft.icons.FILTER_3),
-            ft.PopupMenuButton(
-                items=[
-                    ft.PopupMenuItem(text="Item 1"),
-                ]
-            ),
-        ],
-    )
-
-    name = Control(ft.TextField(label="Name"), sequence=1)
-    age = Control(ft.TextField(label="Age", keyboard_type=ft.KeyboardType.NUMBER), sequence=2)
-    submit_button = Control(ft.ElevatedButton(text="Submit", on_click="on_click_submit"), sequence=3)
-
-    def on_click_submit(self, e):
-        print("Submitted")
-```
-
-## Features
-- can be use for string for assign action in Control class
-- 
-
 
 ## Usage
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/fasilwdr/Flet-Model.git
-   cd Flet-Model
-   ```
-   - Create views under views folder and map it into manifest.json
-   ```json
-   {
-     "name": "Flet App",
-     "short_name": "Flet App",
-     "version": "1.0.1",
-     "views": [
-       "views/main_view.py",
-       "views/second_view.py"
-      ]
-   }
-   ```
+Here's a simple example of how to use Flet Model:
 
-2. Install the required dependencies:
-   ```bash
-   pip install flet
-   ```
+```python
+import flet as ft
+from flet_model import main, Model
 
-3. Run the application:
-   ```bash
-   flet main.py
-   ```
+class FirstView(Model):
+    route = 'first'
+    vertical_alignment = ft.MainAxisAlignment.CENTER
+    horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-The application should start, and you will see a simple form with fields for Name and Age, and a Submit button.
+    appbar = ft.AppBar(
+        title=ft.Text("First View"),
+        center_title=True,
+        bgcolor=ft.Colors.SURFACE)
+    controls = [
+        ft.ElevatedButton("Go to Second Page", on_click="go_second")
+    ]
+
+    def go_second(self, e):
+        self.page.go('first/second')
+
+class SecondView(Model):
+    route = 'second'
+    vertical_alignment = ft.MainAxisAlignment.CENTER
+    horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    appbar = ft.AppBar(
+        title=ft.Text("Second View"),
+        center_title=True,
+        bgcolor=ft.Colors.SURFACE)
+    controls = [
+        ft.ElevatedButton("Go to First", on_click="go_first")
+    ]
+
+    def go_first(self, e):
+        self.page.go('first')
+
+# Run the Flet app
+ft.app(target=main)
+```
+
+## Features
+
+- Model-based view definition
+- Automatic route handling
+- Event binding
+- Support for nested routes
+- Easy navigation between views
 
 ## License
 

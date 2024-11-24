@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flet-model"
+version = "0.1.0"
+description = "A Model-based router for Flet applications that simplifies the creation of multi-page applications"
+readme = "README.md"
+authors = [{ name = "Fasil", email = "fasilwdr@hotmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 3 :: Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: User Interfaces",
+]
+keywords = ["flet", "router", "model", "navigation", "gui", "mvc", "ui", "framework"]
+dependencies = [
+    "flet>=0.10.0",
+]
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov",  # for coverage reporting
+    "black",       # for formatting
+    "isort",       # for import sorting
+    "flake8",      # for linting
+    "mypy",        # for type checking
+    "build",       # for building package
+    "twine",       # for publishing
+    "sphinx",      # for documentation
+    "sphinx-rtd-theme",  # for documentation theme
+]
+
+[project.urls]
+Homepage = "https://github.com/fasilwdr/Flet-Model"
+Documentation = "https://github.com/fasilwdr/Flet-Model#readme"
+Repository = "https://github.com/fasilwdr/Flet-Model.git"
+Issues = "https://github.com/fasilwdr/Flet-Model/issues"
+Changelog = "https://github.com/fasilwdr/Flet-Model/releases"
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded with ^/ will apply only to files and directories
+# in the root of the project.
+^/docs/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+known_first_party = ["flet_model"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --cov=flet_model --cov-report=term-missing"
+testpaths = [
+    "tests",
+]
+python_files = ["test_*.py"]
+pythonpath = [
+    "src"
+]
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_optional = true
