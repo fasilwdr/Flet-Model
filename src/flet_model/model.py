@@ -1,7 +1,6 @@
 from typing import List, Optional, Callable, Any, Union, Dict
 import flet as ft
 from functools import lru_cache
-import weakref
 
 
 class Model:
@@ -142,7 +141,7 @@ class Model:
 
     def bind_event_handlers(self, controls: List[ft.Control]) -> None:
         """Recursively bind event handlers to controls with caching."""
-        event_attrs = ('on_click', 'on_hover', 'on_long_press', 'on_change', 'on_dismiss')
+        event_attrs = ('on_click', 'on_hover', 'on_long_press', 'on_change', 'on_dismiss', 'on_submit')
 
         for control in controls:
             if not control:
