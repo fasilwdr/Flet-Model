@@ -36,6 +36,7 @@ class Model:
         self.page = page
         self.view: Optional[ft.View] = None
         self._control_cache = {}
+        self.route_data: Dict[str, Any] = {}
 
     @lru_cache(maxsize=32)
     def get_cached_controls(self) -> List[ft.Control]:
@@ -111,7 +112,6 @@ class Model:
         """Update the view with current model properties."""
         if not self.view:
             return
-
         # Batch update all properties
         updates = {
             'controls': self.get_cached_controls(),
@@ -169,3 +169,5 @@ class Model:
                 self.bind_event_handlers([control.content])
             if hasattr(control, 'header') and control.header:
                 self.bind_event_handlers([control.header])
+            if hasattr(control, 'actions') and control.actions:
+                self.bind_event_handlers(control.actions)
