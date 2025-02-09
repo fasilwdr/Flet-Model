@@ -76,6 +76,8 @@ class Router:
 
                 if part not in self._view_cache:
                     self._view_cache[part] = model.create_view()
+                else:
+                    mode.init()
                 self._page.views.append(self._view_cache[part])
 
         self._page.update()
