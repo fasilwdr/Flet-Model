@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flet-model"
-version = "0.1.4"
+version = "0.1.5"
 description = "A Model-based router for Flet applications that simplifies the creation of multi-page applications"
 readme = "README.md"
 authors = [{ name = "Fasil", email = "fasilwdr@hotmail.com" }]

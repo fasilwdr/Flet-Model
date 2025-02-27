@@ -1,6 +1,6 @@
 from .model import Model
-from .router import Router
+from .router import Router, route
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
-__all__ = ["Model", "Router"]
+__all__ = ["Model", "Router", "route"]

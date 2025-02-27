@@ -23,12 +23,11 @@ pip install flet-model
 
 ```python
 import flet as ft
-from flet_model import Model, Router
+from flet_model import Model, route
 
 
+@route('home')
 class HomeModel(Model):
-    route = 'home'
-
     # Layout configuration
     vertical_alignment = ft.MainAxisAlignment.CENTER
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -51,9 +50,8 @@ class HomeModel(Model):
         self.page.go('/home/profile')
 
 
+@route('profile')
 class ProfileModel(Model):
-    route = 'profile'
-
     # Layout configuration
     vertical_alignment = ft.MainAxisAlignment.CENTER
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -74,11 +72,8 @@ class ProfileModel(Model):
 
 def main(page: ft.Page):
     page.title = "Flet Model Demo"
-    Router(
-        {'home': HomeModel(page)},
-        {'profile': ProfileModel(page)},
-    )
-    page.go(page.route)
+    # Router is automatically initialized
+    page.go('/home')
 
 
 ft.app(target=main)
@@ -92,6 +87,7 @@ ft.app(target=main)
 # Navigate with data
 self.page.go('/products#id=123&category=electronics')
 
+@route('products')
 class ProductModel(Model):
     def init(self):
         # Access route data
@@ -102,6 +98,7 @@ class ProductModel(Model):
 ### 2. Navigation Drawers
 
 ```python
+@route('drawer-demo')
 class DrawerModel(Model):
     drawer = ft.NavigationDrawer(
         controls=[
@@ -131,6 +128,7 @@ class DrawerModel(Model):
 ### 3. Event Handlers and Lifecycle Hooks
 
 ```python
+@route('events')
 class EventModel(Model):
     def init(self):
         # Called before view creation
@@ -152,6 +150,7 @@ class EventModel(Model):
 ### 4. Floating Action Button
 
 ```python
+@route('fab-demo')
 class FABModel(Model):
     floating_action_button = ft.FloatingActionButton(
         icon=ft.Icons.ADD,
@@ -163,6 +162,7 @@ class FABModel(Model):
 ### 5. Bottom Navigation
 
 ```python
+@route('navigation')
 class NavigationModel(Model):
     navigation_bar = ft.NavigationBar(
         destinations=[
@@ -176,6 +176,7 @@ class NavigationModel(Model):
 ### 6. Overlay Controls
 
 ```python
+@route('overlay')
 class OverlayModel(Model):
     overlay_controls = [
         ft.Banner(
@@ -194,8 +195,8 @@ class OverlayModel(Model):
 ### 7. Fullscreen Dialogs
 
 ```python
+@route('dialog')
 class DialogModel(Model):
-    route = "dialog"
     fullscreen_dialog = True
 
     controls = [
@@ -214,7 +215,7 @@ Here's a complete example of a todo application using Flet Model:
 
 ```python
 import flet as ft
-from flet_model import Model, Router
+from flet_model import Model, route
 from typing import List
 
 
@@ -224,8 +225,8 @@ class TodoItem:
         self.completed = completed
 
 
+@route('todo')
 class TodoModel(Model):
-    route = "todo"
     todos: List[TodoItem] = []
 
     appbar = ft.AppBar(
@@ -275,9 +276,7 @@ class TodoModel(Model):
 
 
 def main(page: ft.Page):
-    Router(
-        {'todo': TodoModel(page)}
-    )
+    # No manual router initialization needed
     page.go('todo')
 
 

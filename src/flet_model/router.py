@@ -1,7 +1,43 @@
-from typing import Dict, Optional, Type, Any
+from typing import Dict, Optional, Type, Any, Callable, TypeVar, List, Tuple
 import urllib.parse
 import flet as ft
 from .model import Model
+
+# Type variable for decorator return type annotation
+T = TypeVar('T', bound=Type[Model])
+
+# Global storage for route registrations
+_pending_registrations: List[Tuple[str, Type[Model]]] = []
+
+
+def route(route_path: str) -> Callable[[T], T]:
+    """
+    Decorator for registering a model class with a specific route.
+
+    Example:
+        @route('todo')
+        class TodoModel(Model):
+            # model implementation
+
+    Args:
+        route_path: The route path to register
+
+    Returns:
+        The decorated model class
+    """
+
+    def decorator(model_class: T) -> T:
+        if not issubclass(model_class, Model):
+            raise TypeError(f"Class {model_class.__name__} must inherit from Model")
+
+        # Store the route in the class for reference
+        model_class.route = route_path
+
+        # Save for deferred registration
+        _pending_registrations.append((route_path, model_class))
+        return model_class
+
+    return decorator
 
 
 class Router:
@@ -11,6 +47,7 @@ class Router:
     _routes: Dict[str, Model] = {}
     _page: Optional[ft.Page] = None
     _view_cache: Dict[str, ft.View] = {}
+    _initialized: bool = False
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -18,15 +55,21 @@ class Router:
         return cls._instance
 
     def __init__(self, *route_maps: Dict[str, Model]):
-        if not self._routes:
-            self._routes = {}
-            for route_map in route_maps:
-                self._routes.update(route_map)
+        if self._initialized:
+            return
 
-            if route_maps and list(route_maps[0].values()):
-                first_model = list(route_maps[0].values())[0]
-                self._page = first_model.page
-                self._setup_routing()
+        self._routes = {}
+
+        # Add any routes from explicit dictionaries
+        for route_map in route_maps:
+            self._routes.update(route_map)
+
+        # If we have routes and a page from dict-based initialization
+        if route_maps and list(route_maps[0].values()):
+            first_model = list(route_maps[0].values())[0]
+            self._page = first_model.page
+            self._setup_routing()
+            self._initialized = True
 
     def _parse_route_and_hash(self, route: str) -> tuple[list[str], dict[str, dict]]:
         parts = route.split('/')
@@ -47,7 +90,6 @@ class Router:
 
         return route_parts, hash_data
 
-
     def _setup_routing(self) -> None:
         """Set up route handling and initialize default route."""
         if not self._page:
@@ -55,11 +97,6 @@ class Router:
 
         self._page.on_route_change = self._handle_route_change
         self._page.on_view_pop = self._handle_view_pop
-
-        if not self._page.route or self._page.route == '/':
-            default_route = next(iter(self._routes.keys()))
-            self._page.route = default_route
-            self._page.go(default_route)
 
     def _handle_route_change(self, e: ft.RouteChangeEvent) -> None:
         route_parts, hash_data = self._parse_route_and_hash(self._page.route.lstrip('/'))
@@ -105,3 +142,62 @@ class Router:
 
         current_route = cls._instance._page.route.split('/')[-1]
         return cls._instance._routes.get(current_route)
+
+    # Auto-initialize with the page when app starts
+    @classmethod
+    def initialize(cls, page: ft.Page) -> None:
+        """
+        Initialize the router with a page and register any pending routes.
+        This also sets up the route handlers.
+
+        Args:
+            page: The flet Page instance
+        """
+        global _pending_registrations
+
+        # Create instance if it doesn't exist
+        if not cls._instance:
+            cls._instance = cls()
+
+        cls._instance._page = page
+        cls._instance._initialized = True
+
+        # Register any routes that were decorated
+        for route_path, model_class in _pending_registrations:
+            model_instance = model_class(page)
+            cls._instance._routes[route_path] = model_instance
+
+        # Clear pending registrations
+        _pending_registrations = []
+
+        # Setup routing
+        cls._instance._setup_routing()
+
+        # Return the instance for method chaining if needed
+        return cls._instance
+
+    @classmethod
+    def navigate(cls, route: str) -> None:
+        """
+        Navigate to a specific route, ensuring the router is initialized first.
+
+        Args:
+            route: The route to navigate to
+        """
+        if cls._instance and cls._instance._page:
+            cls._instance._page.go(route)
+
+
+# Modify flet.Page to inject our router
+def enhanced_page_go(self, route, *args, **kwargs):
+    """Enhanced go method that ensures router is initialized before navigation"""
+    # Initialize router if there are pending routes
+    if _pending_registrations and not Router._instance:
+        Router.initialize(self)
+    # Call the original go method
+    original_go(self, route, *args, **kwargs)
+
+
+# Store original method and apply patch
+original_go = ft.Page.go
+ft.Page.go = enhanced_page_go
