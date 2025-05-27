@@ -77,8 +77,12 @@ class Model:
         controls_to_bind.extend(self.overlay_controls)
         if self.floating_action_button:
             controls_to_bind.append(self.floating_action_button)
+        if self.appbar:
+            controls_to_bind.append(self.appbar)
         if self.bottom_appbar:
             controls_to_bind.append(self.bottom_appbar)
+        if self.navigation_bar:
+            controls_to_bind.append(self.navigation_bar)
 
         self.bind_event_handlers(controls_to_bind)
 
@@ -171,3 +175,9 @@ class Model:
                 self.bind_event_handlers([control.header])
             if hasattr(control, 'actions') and control.actions:
                 self.bind_event_handlers(control.actions)
+            if hasattr(control, 'leading') and control.leading:
+                self.bind_event_handlers([control.leading])
+            if hasattr(control, 'destinations') and control.destinations:
+                self.bind_event_handlers(control.destinations)
+            if hasattr(control, 'segments') and control.segments:
+                self.bind_event_handlers(control.segments)
