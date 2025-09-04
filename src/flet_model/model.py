@@ -145,7 +145,7 @@ class Model:
 
     def bind_event_handlers(self, controls: List[ft.Control]) -> None:
         """Recursively bind event handlers to controls with caching."""
-        event_attrs = ('on_click', 'on_hover', 'on_long_press', 'on_change', 'on_dismiss', 'on_submit')
+        event_attrs = ('on_click', 'on_hover', 'on_long_press', 'on_change', 'on_dismiss', 'on_submit', 'on_confirm_dismiss')
 
         for control in controls:
             if not control:

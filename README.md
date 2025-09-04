@@ -2,6 +2,9 @@
 
 A Model-based router for Flet applications that simplifies the creation of multi-page applications with built-in state management and navigation.
 
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/flet-model?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=BLUE&left_text=downloads)](https://pepy.tech/projects/flet-model)
+
+
 ## Installation
 
 ```bash
